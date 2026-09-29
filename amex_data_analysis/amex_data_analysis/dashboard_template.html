@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Transaction Intelligence Dashboard</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+:root{--bg:#f3f6fb;--card:#fff;--text:#0f1b2d;--muted:#5b6b82;--line:#e3e9f2;--blue:#006fcf;--cyan:#00a3e0;--violet:#7a5af8;--green:#12b76a;--red:#f04438;--amber:#f79009;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0a1220;--card:#121c2f;--text:#eaf0fa;--muted:#8fa1bd;--line:#22304a}}
+:root[data-theme="dark"]{--bg:#0a1220;--card:#121c2f;--text:#eaf0fa;--muted:#8fa1bd;--line:#22304a}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:15px/1.5 Inter,system-ui,-apple-system,"Segoe UI",sans-serif}
+header{background:linear-gradient(120deg,#00408a,#006fcf 55%,#00a3e0);color:#fff;padding:28px 20px 70px}
+.wrap{max-width:1180px;margin:0 auto;padding:0 16px}
+.brand{display:flex;align-items:center;gap:14px}.logo{width:44px;height:44px;border-radius:10px;background:#fff;color:#006fcf;font-weight:800;display:grid;place-items:center;letter-spacing:-1px}
+h1{margin:0;font-size:1.5rem}.sub{opacity:.85;font-size:.85rem}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:14px;margin-top:-50px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px;box-shadow:0 6px 24px rgba(10,30,70,.07)}
+.kpi .l{color:var(--muted);font-size:.78rem;text-transform:uppercase;letter-spacing:.06em}.kpi .v{font-size:1.7rem;font-weight:700;margin-top:4px}
+.grid{display:grid;grid-template-columns:repeat(12,1fr);gap:14px;margin:14px 0 40px}
+.c8{grid-column:span 8}.c4{grid-column:span 4}.c6{grid-column:span 6}.c12{grid-column:span 12}
+@media(max-width:860px){.c8,.c4,.c6{grid-column:span 12}}
+h2{font-size:1rem;margin:0 0 12px}.box{position:relative;height:260px}
+.scroll{overflow-x:auto}table{width:100%;border-collapse:collapse;font-size:.85rem}
+th{color:var(--muted);font-weight:600;text-align:left;padding:8px 6px;border-bottom:1px solid var(--line)}td{padding:9px 6px;border-bottom:1px solid var(--line);white-space:nowrap}
+.bar{height:8px;border-radius:99px;background:var(--line);overflow:hidden;min-width:80px}.bar i{display:block;height:100%;background:linear-gradient(90deg,var(--blue),var(--cyan))}
+.pill{padding:2px 9px;border-radius:99px;font-size:.72rem;font-weight:600}.hit{background:rgba(18,183,106,.15);color:var(--green)}.miss{background:rgba(247,144,9,.15);color:var(--amber)}
+.m{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:14px}.m div{background:var(--bg);border-radius:12px;padding:10px 12px}
+.m b{font-size:1.25rem;display:block}.m span{color:var(--muted);font-size:.75rem}
+.imp{display:grid;grid-template-columns:110px 1fr 40px;gap:8px;align-items:center;font-size:.8rem;margin:6px 0}
+footer{text-align:center;color:var(--muted);font-size:.78rem;padding-bottom:30px}
+</style></head><body>
+<header><div class="wrap brand"><div class="logo">AX</div><div><h1>Transaction Intelligence Dashboard</h1>
+<div class="sub">American Express-style data analysis · synthetic dataset · Oct 2025 – Sep 2026</div></div></div></header>
+<main class="wrap">
+<section class="kpis" id="kpis"></section>
+<section class="grid">
+<div class="card c8"><h2>Monthly spend &amp; 3-month forecast</h2><div class="box"><canvas id="c1"></canvas></div></div>
+<div class="card c4"><h2>Spend by category</h2><div class="box"><canvas id="c2"></canvas></div></div>
+<div class="card c6"><h2>Spend by region</h2><div class="box"><canvas id="c3"></canvas></div></div>
+<div class="card c6"><h2>Customer segments (K-Means)</h2><div class="scroll"><table id="seg"></table></div></div>
+<div class="card c8"><h2>Top flagged transactions (Isolation Forest)</h2><div class="scroll"><table id="an"></table></div></div>
+<div class="card c4"><h2>Model performance</h2><div class="m" id="met"></div><div id="imp"></div></div>
+</section>
+<footer>Python · Pandas · NumPy · Scikit-learn · Matplotlib · Seaborn · SQL — data is randomly generated, not real customer data.</footer>
+</main>
+<script>
+const D=/*__DATA__*/null;
+const $=id=>document.getElementById(id),cs=getComputedStyle(document.documentElement);
+const css=v=>cs.getPropertyValue(v).trim(),usd=v=>'$'+Math.round(v).toLocaleString('en-US'),
+short=v=>v>=1e6?'$'+(v/1e6).toFixed(2)+'M':v>=1e3?'$'+(v/1e3).toFixed(0)+'K':'$'+v,pc=v=>(v*100).toFixed(1)+'%';
+const k=D.kpi;
+$('kpis').innerHTML=[['Total spend',short(k.spend)],['Transactions',k.txns.toLocaleString('en-US')],['Customers',k.customers.toLocaleString('en-US')],['Avg transaction','$'+k.avg_txn],['Flagged anomalies',k.flagged]]
+ .map(([l,v])=>`<div class="card kpi"><div class="l">${l}</div><div class="v">${v}</div></div>`).join('');
+Chart.defaults.color=css('--muted');Chart.defaults.borderColor=css('--line');Chart.defaults.font.family='Inter,system-ui,sans-serif';
+const P=[css('--blue'),css('--cyan'),css('--violet'),css('--green'),css('--amber'),css('--red'),'#98a2b3','#344054'];
+const o={responsive:true,maintainAspectRatio:false},mo=D.monthly,all=mo.labels.concat(mo.f_labels),pad=Array(mo.actual.length-1).fill(null);
+new Chart($('c1'),{type:'line',data:{labels:all,datasets:[
+ {label:'Actual',data:mo.actual,borderColor:P[0],backgroundColor:P[0]+'22',fill:true,tension:.35},
+ {label:'Forecast',data:pad.concat([mo.actual.at(-1)],mo.forecast),borderColor:P[4],borderDash:[6,5],tension:.35}]},
+ options:{...o,scales:{y:{ticks:{callback:short}}},plugins:{tooltip:{callbacks:{label:c=>c.dataset.label+': '+usd(c.raw)}}}}});
+new Chart($('c2'),{type:'doughnut',data:{labels:D.categories.labels,datasets:[{data:D.categories.values,backgroundColor:P,borderWidth:0}]},
+ options:{...o,cutout:'62%',plugins:{legend:{position:'bottom',labels:{boxWidth:10,font:{size:10}}}}}});
+new Chart($('c3'),{type:'bar',data:{labels:D.regions.labels,datasets:[{data:D.regions.values,backgroundColor:P[0],borderRadius:8}]},
+ options:{...o,plugins:{legend:{display:false}},scales:{y:{ticks:{callback:short}}}}});
+const tot=D.segments.reduce((a,s)=>a+s.customers,0);
+$('seg').innerHTML='<tr><th>Segment</th><th>Customers</th><th>Avg spend</th><th>Txns</th><th>Share</th></tr>'+D.segments.map(s=>
+ `<tr><td><b>${s.name}</b></td><td>${s.customers}</td><td>${usd(s.avg_spend)}</td><td>${s.avg_txns}</td><td><div class="bar"><i style="width:${s.customers/tot*100}%"></i></div></td></tr>`).join('');
+$('an').innerHTML='<tr><th>Txn</th><th>Customer</th><th>Category</th><th>Amount</th><th>Hour</th><th>Date</th><th>Ground truth</th></tr>'+D.anomalies.map(a=>
+ `<tr><td>#${a.id}</td><td>${a.cust}</td><td>${a.cat}</td><td><b>${usd(a.amt)}</b></td><td>${String(a.hour).padStart(2,'0')}:00</td><td>${a.date}</td><td><span class="pill ${a.fraud?'hit':'miss'}">${a.fraud?'True fraud':'False alarm'}</span></td></tr>`).join('');
+const m=D.metrics;
+$('met').innerHTML=[['Churn accuracy',pc(m.acc)],['Churn F1',pc(m.f1)],['Churn precision',pc(m.prec)],['Churn recall',pc(m.rec)],['Fraud precision',pc(m.a_prec)],['Fraud recall',pc(m.a_rec)]]
+ .map(([l,v])=>`<div><b>${v}</b><span>${l}</span></div>`).join('');
+const mx=D.importance[0].v;
+$('imp').innerHTML='<h2 style="font-size:.85rem;color:var(--muted)">Top churn drivers</h2>'+D.importance.map(i=>
+ `<div class="imp"><span>${i.f.replace(/_/g,' ')}</span><div class="bar"><i style="width:${i.v/mx*100}%"></i></div><span>${i.v}</span></div>`).join('');
+</script></body></html>

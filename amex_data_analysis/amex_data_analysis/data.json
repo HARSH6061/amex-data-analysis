@@ -1,0 +1,218 @@
+{
+ "kpi": {
+  "spend": 5776519.0,
+  "txns": 43684,
+  "customers": 1500,
+  "avg_txn": 132.23,
+  "flagged": 656
+ },
+ "monthly": {
+  "labels": [
+   "2025-10",
+   "2025-11",
+   "2025-12",
+   "2026-01",
+   "2026-02",
+   "2026-03",
+   "2026-04",
+   "2026-05",
+   "2026-06",
+   "2026-07",
+   "2026-08",
+   "2026-09"
+  ],
+  "actual": [
+   569974.0,
+   507551.0,
+   547450.0,
+   525213.0,
+   477863.0,
+   505297.0,
+   545201.0,
+   491703.0,
+   426709.0,
+   388814.0,
+   398201.0,
+   392544.0
+  ],
+  "f_labels": [
+   "2026-10",
+   "2026-11",
+   "2026-12"
+  ],
+  "forecast": [
+   380071.0,
+   364486.0,
+   348901.0
+  ]
+ },
+ "categories": {
+  "labels": [
+   "Shopping",
+   "Travel",
+   "Groceries",
+   "Dining",
+   "Utilities",
+   "Health",
+   "Fuel",
+   "Entertainment"
+  ],
+  "values": [
+   1257905.0,
+   1200064.0,
+   978201.0,
+   806830.0,
+   499726.0,
+   375498.0,
+   344806.0,
+   313488.0
+  ]
+ },
+ "regions": {
+  "labels": [
+   "North America",
+   "Europe",
+   "Asia Pacific",
+   "Latin America",
+   "Middle East"
+  ],
+  "values": [
+   2233916.0,
+   1543444.0,
+   1224974.0,
+   447625.0,
+   326559.0
+  ]
+ },
+ "segments": [
+  {
+   "name": "Budget Savers",
+   "customers": 333,
+   "avg_spend": 1403.0,
+   "avg_txns": 24.2
+  },
+  {
+   "name": "Steady Spenders",
+   "customers": 290,
+   "avg_spend": 2374.0,
+   "avg_txns": 17.5
+  },
+  {
+   "name": "Premium Explorers",
+   "customers": 539,
+   "avg_spend": 3494.0,
+   "avg_txns": 35.5
+  },
+  {
+   "name": "Elite Big Spenders",
+   "customers": 338,
+   "avg_spend": 8100.0,
+   "avg_txns": 33.7
+  }
+ ],
+ "anomalies": [
+  {
+   "id": 40094,
+   "cust": 1375,
+   "cat": "Travel",
+   "amt": 18554.0,
+   "hour": 4,
+   "date": "13 Sep 2026",
+   "fraud": 1
+  },
+  {
+   "id": 36079,
+   "cust": 1243,
+   "cat": "Travel",
+   "amt": 13718.0,
+   "hour": 1,
+   "date": "23 Aug 2026",
+   "fraud": 1
+  },
+  {
+   "id": 21789,
+   "cust": 756,
+   "cat": "Travel",
+   "amt": 13084.0,
+   "hour": 3,
+   "date": "07 Oct 2025",
+   "fraud": 1
+  },
+  {
+   "id": 29582,
+   "cust": 1025,
+   "cat": "Travel",
+   "amt": 10024.0,
+   "hour": 3,
+   "date": "24 Apr 2026",
+   "fraud": 1
+  },
+  {
+   "id": 3344,
+   "cust": 114,
+   "cat": "Travel",
+   "amt": 9539.0,
+   "hour": 4,
+   "date": "12 Sep 2026",
+   "fraud": 1
+  },
+  {
+   "id": 25563,
+   "cust": 886,
+   "cat": "Shopping",
+   "amt": 8703.0,
+   "hour": 4,
+   "date": "06 Nov 2025",
+   "fraud": 1
+  },
+  {
+   "id": 15009,
+   "cust": 515,
+   "cat": "Shopping",
+   "amt": 8309.0,
+   "hour": 4,
+   "date": "13 Jun 2026",
+   "fraud": 1
+  },
+  {
+   "id": 17391,
+   "cust": 598,
+   "cat": "Shopping",
+   "amt": 8252.0,
+   "hour": 2,
+   "date": "22 Jan 2026",
+   "fraud": 1
+  }
+ ],
+ "metrics": {
+  "acc": 0.893,
+  "prec": 0.87,
+  "rec": 0.351,
+  "f1": 0.5,
+  "a_prec": 0.639,
+  "a_rec": 0.857,
+  "churn_rate": 0.151
+ },
+ "importance": [
+  {
+   "f": "tenure_days",
+   "v": 0.308
+  },
+  {
+   "f": "txn_count",
+   "v": 0.211
+  },
+  {
+   "f": "total_spend",
+   "v": 0.161
+  },
+  {
+   "f": "avg_txn",
+   "v": 0.153
+  },
+  {
+   "f": "last_60d_txns",
+   "v": 0.121
+  }
+ ]
+}
